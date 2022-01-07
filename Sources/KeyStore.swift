@@ -231,7 +231,7 @@ public final class KeyStore {
     ///   - account: account to update
     ///   - password: current password
     ///   - newPassword: new password
-    public func update(account: Account, password: String, newPassword: String) throws {
+    public func update(account: Account, password: String, newPassword: String, derivationPath: String = Wallet.defaultPath) throws {
         guard let key = keysByAddress[account.address] else {
             throw DecryptError.missingAccountKey
         }
@@ -249,7 +249,7 @@ public final class KeyStore {
             guard let string = String(data: privateKey, encoding: .ascii) else {
                 throw EncryptError.invalidMnemonic
             }
-            newKey = try KeystoreKey(password: newPassword, mnemonic: string, passphrase: key.passphrase)
+            newKey = try KeystoreKey(password: newPassword, mnemonic: string, passphrase: key.passphrase, derivationPath: derivationPath)
         }
         keysByAddress[newKey.address] = newKey
         try save(key: newKey, to: account.url)

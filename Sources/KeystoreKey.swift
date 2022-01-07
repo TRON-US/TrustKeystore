@@ -59,11 +59,9 @@ public struct KeystoreKey {
             }
             
             let key = keyRepresentation[(keyRepresentation.count - 32)...]
-            //print("创建了私钥\(key.hexString)")
             try self.init(password: password, key: key)
         case .hierarchicalDeterministicWallet:
             let mnemonic = Mnemonic.generate(strength: 128)
-            //print("助记词\(mnemonic)")
             try self.init(password: password, mnemonic: mnemonic, passphrase: "")
         }
     }
@@ -105,16 +103,11 @@ public struct KeystoreKey {
 
     /// Decodes an Ethereum address from a public key.
     static func decodeAddress(from publicKey: Data) -> TrustCore.Address {
-        print("公钥处理")
         precondition(publicKey.count == 65, "Expect 64-byte public key")
         precondition(publicKey[0] == 4, "Invalid public key")
-        print("公钥处理1")
         let sha3 = publicKey[1...].sha3(.keccak256)
-        //个人修改
         var data = Data(hex: "41")
         data.append(sha3[12..<32])
-        //个人修改
-        print("公钥处理2")
         return TrustCore.Address(data: data)
     }
 
