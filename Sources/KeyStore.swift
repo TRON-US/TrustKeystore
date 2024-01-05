@@ -261,15 +261,9 @@ public final class KeyStore {
             throw DecryptError.missingAccountKey
         }
 
-        var privateKey = try key.decrypt(password: password)
-        defer {
-            privateKey.resetBytes(in: 0..<privateKey.count)
-        }
-
         keysByAddress[account.address] = nil
-
-        try FileManager.default.removeItem(at: account.url)
         accountsByAddress[account.address] = nil
+        try FileManager.default.removeItem(at: account.url)
     }
 
     /// Calculates a ECDSA signature for the give hash.
